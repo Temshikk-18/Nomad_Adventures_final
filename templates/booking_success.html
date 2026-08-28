@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% load site_i18n %}
+{% block content %}<section class="success"><div><div class="success-icon">✓</div><span class="eyebrow dark">NOMAD ADVENTURES</span><h1>{% site_text "sent" %}</h1><p>{% site_text "thanks" %}</p><a class="btn btn-dark" href="{% url 'tours:home' %}">← {% site_text "back_home" %}</a></div></section>{% endblock %}

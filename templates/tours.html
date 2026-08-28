@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load site_i18n %}
+
+{% block content %}
+<section class="page-head" style="padding: 3rem 0; background: #f4f6f5; margin-bottom: 2rem;">
+  <div class="container" style="max-width: 1240px; margin: 0 auto; padding: 0 1rem;">
+    <span class="eyebrow dark" style="font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; color: #666; text-transform: uppercase; display: block; margin-bottom: 0.5rem;">NOMAD ADVENTURES</span>
+    <h1 style="font-size: 2.2rem; font-weight: 800; color: #111; margin-bottom: 0.5rem;">{% site_text "choose_route" %}</h1>
+    <p style="color: #666; font-size: 1rem; max-width: 600px;">{% site_text "tours_desc" %}</p>
+  </div>
+</section>
+
+<section class="section" id="categories" style="padding-bottom: 4rem;">
+  <div class="container" style="max-width: 1240px; margin: 0 auto; padding: 0 1rem;">
+
+    <!-- Фильтрлер тилкеси -->
+    <div class="filters-wrapper" style="margin-bottom: 2.5rem; overflow-x: auto; white-space: nowrap; padding-bottom: 0.5rem;">
+      <div class="filters" style="display: inline-flex; gap: 0.75rem;">
+        <a class="filter-pill {% if not request.GET.category %}active{% endif %}" href="{% url 'tours:tour_list' %}" style="display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.88rem; background: {% if not request.GET.category %}#111{% else %}#f4f6f5{% endif %}; color: {% if not request.GET.category %}#fff{% else %}#333{% endif %}; border: 1px solid #ddd; transition: all 0.2s;">
+          🌐 {% site_text "all_tours" %}
+        </a>
+        {% for category in categories %}
+        <a class="filter-pill {% if category.slug == request.GET.category %}active{% endif %}" href="?category={{ category.slug }}" style="display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.88rem; background: {% if category.slug == request.GET.category %}#111{% else %}#f4f6f5{% endif %}; color: {% if category.slug == request.GET.category %}#fff{% else %}#333{% endif %}; border: 1px solid #ddd; transition: all 0.2s;">
+          {{ category.icon }} {{ category|localized:'name' }}
+          <span style="opacity: 0.7; font-size: 0.85em; margin-left: 4px;">({{ category.min_days|default:1 }}–{{ category.max_days|default:1 }} {% site_text "days_short" %})</span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Турлар сеткасы -->
+    <div class="tour-grid light-tour-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
+      {% for tour in tours %}
+      <article class="tour-card light-card" style="border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid #eaeaea; box-shadow: 0 10px 30px rgba(0,0,0,0.04); display: flex; flex-direction: column; transition: transform 0.3s ease;">
+        {% if tour.image %}
+        <div class="tour-img-wrap" style="position: relative; height: 220px; overflow: hidden; background: #eee;">
+          <img src="{{ tour.image.url }}" alt="{{ tour|localized:'title' }}" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        {% endif %}
+        <div class="tour-body" style="padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1;">
+          <div class="tour-meta" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; font-size: 0.9rem; color: #666;">
+            <span style="background: #f4f6f5; padding: 4px 10px; border-radius: 20px; font-weight: 500;">⏳ {{ tour.days }} {% site_text "days_short" %}</span>
+            <strong style="font-size: 1.25rem; color: #111;">${{ tour.price_usd }}</strong>
+          </div>
+          <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: #1a1a1a; line-height: 1.4;">{{ tour|localized:'title' }}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem; flex-grow: 1;">{{ tour|localized:'description'|truncatewords:20 }}</p>
+          <a class="btn btn-dark" href="{% url 'tours:tour_detail' tour.slug %}" style="display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 0.75rem 1rem; background: #111; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; transition: background 0.2s;">
+            {% site_text "route" %} →
+          </a>
+        </div>
+      </article>
+      {% empty %}
+      <div class="empty-card" style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; background: #f9f9f9; border-radius: 16px; color: #666; font-size: 1.1rem;">
+        {% site_text "no_tours" %}
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}

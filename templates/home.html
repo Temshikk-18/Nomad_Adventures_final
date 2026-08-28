@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load site_i18n %}
+{% block content %}
+<section class="hero">
+  <div class="hero-bg"></div><div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <span class="eyebrow">NOMAD ADVENTURES · KYRGYZSTAN</span>
+    <h1>{% site_text "discover_kg" %}<br>{% site_text "hero_title_2" %}</h1>
+    <p>{% site_text "hero_desc" %}</p>
+    <div class="hero-actions">
+      <a class="btn btn-green" href="{% url 'tours:tour_list' %}">◉ {% site_text "find_adventure" %}</a>
+    </div>
+  </div>
+  <a class="hero-scroll" href="#categories">↓</a>
+</section>
+
+<section class="section categories-section" id="categories"><div class="container"><div class="section-title-row"><div><span class="eyebrow dark">{% site_text "categories_label" %}</span><h2>{% site_text "choose_category" %}</h2></div><a class="green-link" href="{% url 'tours:tour_list' %}">{% site_text "all_tours" %} →</a></div>
+  <div class="category-grid">{% for category in categories %}<a class="category-card" href="{% url 'tours:tour_list' %}?category={{ category.slug }}"><div class="category-icon">{{ category.icon }}</div><div><h3>{{ category|localized:'name' }}</h3><p>{{ category|localized:'description'|truncatewords:12 }}</p></div><span class="day-badge">{{ category.min_days|default:1 }}–{{ category.max_days|default:1 }} {% site_text "days_short" %}</span><small>{{ category.active_tour_count }} {% site_text "tours_count" %}</small></a>{% endfor %}</div>
+</div></section>
+
+<section class="section regions-section"><div class="container"><div class="section-title-row"><div><span class="eyebrow dark">{% site_text "seven_regions" %}</span><h2>{% site_text "discover_regions" %}</h2></div><a class="green-link" href="{% url 'tours:regions' %}">{% site_text "all_regions" %} →</a></div>
+  <div class="region-cards">{% for region in regions %}<a class="region-tile" href="{% url 'tours:region_detail' region.slug %}">{% if region.image %}<img src="{{ region.image.url }}" alt="{{ region|localized:'name' }}">{% elif region.cover_url %}<img src="{{ region.cover_url }}" alt="{{ region|localized:'name' }}">{% endif %}<div class="region-gradient"></div><div class="region-tile-info"><span>{{ forloop.counter|stringformat:'02d' }}</span><h3>{{ region|localized:'name' }}</h3><p>{{ region.place_count }} {% site_text "places" %}</p></div></a>{% endfor %}</div>
+</div></section>
+
+<section class="section dark-section"><div class="container"><div class="section-title-row"><div><span class="eyebrow">{% site_text "featured_routes" %}</span><h2>{% site_text "go_beautiful" %}</h2></div><a class="green-link light" href="{% url 'tours:tour_list' %}">{% site_text "all_tours" %} →</a></div>
+<div class="tour-grid">{% for tour in tours %}<article class="tour-card">{% if tour.image %}<img src="{{ tour.image.url }}" alt="{{ tour|localized:'title' }}">{% endif %}<div class="tour-body"><div class="tour-meta"><span>{{ tour.days }} {% site_text "days_short" %}</span><strong>${{ tour.price_usd }}</strong></div><h3>{{ tour|localized:'title' }}</h3><p>{{ tour|localized:'description'|truncatewords:18 }}</p><a class="arrow" href="{% url 'tours:tour_detail' tour.slug %}">→</a></div></article>{% endfor %}</div></div></section>
+<section class="about-strip" id="about"><div class="container"><div><span class="eyebrow dark">NOMAD WAY</span><h2>{% site_text "about_title" %}</h2></div><p>{% site_text "about_text" %}</p></div></section>
+{% endblock %}
