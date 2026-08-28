@@ -4,10 +4,12 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-change-me")
-DEBUG = os.getenv("DEBUG", "True").lower() == "true"
-ALLOWED_HOSTS = [x.strip() for x in os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",") if x.strip()]
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
